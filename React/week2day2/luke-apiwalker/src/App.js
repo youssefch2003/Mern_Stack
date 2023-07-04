@@ -28,7 +28,7 @@ function App() {
           <button>SEARCH</button>
         </form>
         </> }/>
-          <Route path=":select/:id" element={<Display/>}/>
+          <Route path="/:select/:id" element={<Display/>}/>
           <Route path="/Error" element={ <h1>These aren't the droids you're looking for</h1> }/>
         </Routes>
        
