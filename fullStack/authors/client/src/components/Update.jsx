@@ -5,7 +5,7 @@ const Update = () => {
     const [name,setName] = useState("")
     const nav = useNavigate("")
     //Create an array to store errors from the API
-    const [errors, setErrors] = useState([]); 
+    const [errorss, setErrors] = useState([]); 
     const { id } = useParams();
     useEffect(() => {
         axios.get('http://localhost:8000/api/authors/'+id)
@@ -14,7 +14,7 @@ const Update = () => {
     });
     }, [id])
 
-
+    // err.me?.response?.data?.error?.errors?.message;
     const onSubmitHandler =(e)=>{
         e.preventDefault();
         axios.put('http://localhost:8000/api/authors/update/'+id,{name})
@@ -22,15 +22,18 @@ const Update = () => {
             console.log(res);
                 nav('/');
         })
-        .catch(err=>{
-            const errorResponse = err.response.data.errors; // Get the errors from err.response.data
-            const errorArr = []; // Define a temp error array to push the messages in
-            for (const key of Object.keys(errorResponse)) { // Loop through all errors and get the messages
-                errorArr.push(errorResponse[key].message)
+        .catch((err) => {
+            console.log('Error:', err);
+            const errorResponse = err.response.data.error.errors;
+            console.log(errorResponse);
+            const errorArr = [];
+            if (errorResponse && typeof errorResponse === 'object') {
+                for (const key of Object.keys(errorResponse)) {
+                    errorArr.push(errorResponse[key]?.message);
+                }
             }
-            // Set Errors
             setErrors(errorArr);
-        })            
+        });           
       }
       
   return (
@@ -43,7 +46,7 @@ const Update = () => {
                     type="text" 
                     name="name" value={name} 
                     onChange={(e) => { setName(e.target.value) }} /> <br />
-                    {errors.map((err, index) => <p key={index}>{err}</p>)}
+                    {errorss.map((err, index) => <p key={index}>{err}</p>)}
             </>
             <input type="submit" />
             <button  onClick={() => nav('/')}>Cancel</button>
